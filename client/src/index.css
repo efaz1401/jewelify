@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  color: #0b0b0f;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.font-display {
+  font-family: 'Fraunces', ui-serif, Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+/* Smooth scroll for parallax feel */
+html { scroll-behavior: smooth; }
+
+/* Shimmer text utility */
+.shimmer-text {
+  background: linear-gradient(90deg, #c9a55c 0%, #e6b865 50%, #c9a55c 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s cubic-bezier(.22,1,.36,1);
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -20px rgba(0,0,0,0.18);
+}
+
+/* Input styling */
+.input {
+  @apply w-full rounded-lg border border-ink-200 bg-white px-4 py-2.5 text-ink-900 placeholder-ink-400 focus:border-accent-500 focus:outline-none focus:ring-2 focus:ring-accent-200 transition;
+}
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.btn-primary {
+  @apply btn bg-ink-900 text-white hover:bg-ink-900/90 focus:ring-ink-900;
+}
+.btn-accent {
+  @apply btn bg-accent-500 text-white hover:bg-accent-600 focus:ring-accent-500;
+}
+.btn-outline {
+  @apply btn border border-ink-900 text-ink-900 hover:bg-ink-900 hover:text-white;
+}
+.btn-ghost {
+  @apply btn text-ink-900 hover:bg-ink-50;
+}
+
+.chip {
+  @apply inline-flex items-center gap-1 rounded-full border border-ink-200 px-3 py-1 text-xs font-medium text-ink-600 bg-white/80 backdrop-blur;
+}
+
+/* Parallax layers */
+.parallax-wrap {
+  perspective: 8px;
+  perspective-origin: 50% 50%;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.parallax-layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
