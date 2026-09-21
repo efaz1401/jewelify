@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import PageTransition from '../components/PageTransition.jsx';
+import Seo from '../seo/Seo.jsx';
 
 export default function About() {
   const { scrollY } = useScroll();
@@ -7,6 +8,11 @@ export default function About() {
 
   return (
     <PageTransition>
+      <Seo
+        title="About Us — Earrings Curated for Bangladeshi Girls"
+        description="Jewelify curates trendy, skin-friendly, budget-friendly earrings for girls and young women in Bangladesh. Cash on delivery, easy exchange."
+        path="/about"
+      />
       <section className="relative h-[60vh] min-h-[420px] overflow-hidden bg-ink-900">
         <motion.img
           style={{ y }}

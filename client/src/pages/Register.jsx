@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.jsx';
 import PageTransition from '../components/PageTransition.jsx';
+import Seo from '../seo/Seo.jsx';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -25,6 +26,7 @@ export default function Register() {
 
   return (
     <PageTransition>
+      <Seo title="Create Account" robots="noindex,nofollow" />
       <div className="mx-auto max-w-md px-4 py-16 lg:px-8">
         <div className="rounded-3xl border border-ink-100 bg-white p-8">
           <h1 className="font-display text-3xl font-semibold">Create your account</h1>

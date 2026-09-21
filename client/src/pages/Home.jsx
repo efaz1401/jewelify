@@ -5,6 +5,8 @@ import { ArrowRight, Sparkles, Shield, Truck, Gem } from 'lucide-react';
 import { api } from '../api/client.js';
 import ProductCard from '../components/ProductCard.jsx';
 import PageTransition from '../components/PageTransition.jsx';
+import Seo from '../seo/Seo.jsx';
+import { organizationSchema, websiteSchema } from '../seo/jsonLd.js';
 
 function ParallaxHero() {
   const ref = useRef(null);
@@ -52,8 +54,8 @@ function ParallaxHero() {
           transition={{ delay: 0.15, duration: 0.7 }}
           className="font-display text-5xl font-semibold leading-[1.05] sm:text-6xl md:text-7xl lg:text-8xl"
         >
-          Earrings that tell<br />
-          <span className="shimmer-text italic">your story.</span>
+          Earrings for every girl,<br />
+          <span className="shimmer-text italic">every story.</span>
         </motion.h1>
 
         <motion.p
@@ -62,8 +64,8 @@ function ParallaxHero() {
           transition={{ delay: 0.25 }}
           className="mt-6 max-w-2xl text-base text-ink-600 md:text-lg"
         >
-          Handcrafted, ethically sourced, and made to be worn. From minimalist studs to statement
-          chandeliers — discover your signature pair.
+          From minimalist studs to Korean-style drops and pearl dangles — skin-friendly, anti-tarnish,
+          and priced for student budgets. Cash on delivery, anywhere in Bangladesh.
         </motion.p>
 
         <motion.div
@@ -180,14 +182,15 @@ export default function Home() {
 
   return (
     <PageTransition>
+      <Seo path="/" jsonLd={[organizationSchema(), websiteSchema()]} />
       <ParallaxHero />
 
       <section className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Feature icon={Sparkles} title="Handcrafted" desc="Each pair made by hand by skilled artisans." />
-          <Feature icon={Gem} title="Ethically sourced" desc="Conflict-free stones, recycled metals." />
-          <Feature icon={Truck} title="Free shipping $100+" desc="Fast, tracked delivery worldwide." />
-          <Feature icon={Shield} title="Secure checkout" desc="PCI-compliant payments via Stripe." />
+          <Feature icon={Sparkles} title="Trendy & curated" desc="Korean and Pinterest-style designs, picked for you." />
+          <Feature icon={Gem} title="Skin-friendly" desc="Anti-tarnish, nickel-safe pieces for sensitive ears." />
+          <Feature icon={Truck} title="Nationwide delivery" desc="Free over ৳999 — anywhere in Bangladesh." />
+          <Feature icon={Shield} title="Cash on delivery" desc="Pay only when your parcel is in your hands." />
         </div>
       </section>
 
@@ -209,7 +212,7 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
             >
-              <Link to={`/shop?category=${c.slug}`} className="card-lift group block overflow-hidden rounded-2xl bg-ink-50">
+              <Link to={`/category/${c.slug}`} className="card-lift group block overflow-hidden rounded-2xl bg-ink-50">
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <motion.img
                     src={c.image || 'https://placehold.co/800x600'}

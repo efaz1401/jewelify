@@ -7,6 +7,9 @@ import Home from './pages/Home.jsx';
 import Shop from './pages/Shop.jsx';
 import ProductDetail from './pages/ProductDetail.jsx';
 import Categories from './pages/Categories.jsx';
+import Category from './pages/Category.jsx';
+import Blog from './pages/Blog.jsx';
+import BlogPost from './pages/BlogPost.jsx';
 import Deals from './pages/Deals.jsx';
 import Cart from './pages/Cart.jsx';
 import Checkout from './pages/Checkout.jsx';
@@ -48,6 +51,9 @@ export default function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/product/:slug" element={<ProductDetail />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/category/:slug" element={<Category />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/deals" element={<Deals />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/about" element={<About />} />

@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { LayoutDashboard, Package, Folder, ClipboardList, Users } from 'lucide-react';
 import PageTransition from '../../components/PageTransition.jsx';
+import Seo from '../../seo/Seo.jsx';
 
 const links = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -13,6 +14,7 @@ const links = [
 export default function AdminLayout() {
   return (
     <PageTransition>
+      <Seo title="Admin" robots="noindex,nofollow" />
       <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
           <aside className="h-fit rounded-2xl border border-ink-100 bg-white p-3">

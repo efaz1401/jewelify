@@ -5,6 +5,8 @@ import { api, apiError } from '../api/client.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import PageTransition from '../components/PageTransition.jsx';
+import Seo from '../seo/Seo.jsx';
+import { formatPrice, FREE_DELIVERY_THRESHOLD, DELIVERY_FEE } from '../utils/format.js';
 
 export default function Checkout() {
   const { user } = useAuth();
@@ -18,17 +20,19 @@ export default function Checkout() {
     city: user?.address?.city || '',
     state: user?.address?.state || '',
     postalCode: user?.address?.postalCode || '',
-    country: user?.address?.country || '',
+    country: user?.address?.country || 'Bangladesh',
     phone: '',
   });
 
-  const shippingFee = subtotal > 0 && subtotal < 100 ? 5 : 0;
-  const tax = Math.round(subtotal * 0.08 * 100) / 100;
-  const total = Math.round((subtotal + shippingFee + tax) * 100) / 100;
+  // BDT pricing — must match server orderController.js
+  const shippingFee = subtotal > 0 && subtotal < FREE_DELIVERY_THRESHOLD ? DELIVERY_FEE : 0;
+  const tax = 0; // VAT included in listed prices
+  const total = Math.round(subtotal + shippingFee + tax);
 
   if (items.length === 0) {
     return (
       <PageTransition>
+        <Seo title="Checkout" robots="noindex,nofollow" />
         <div className="mx-auto max-w-xl px-4 py-24 text-center lg:px-8">
           <h1 className="font-display text-3xl font-semibold">Your cart is empty</h1>
           <button onClick={() => navigate('/shop')} className="btn-primary mt-6">Shop earrings</button>
@@ -63,6 +67,7 @@ export default function Checkout() {
 
   return (
     <PageTransition>
+      <Seo title="Checkout" robots="noindex,nofollow" />
       <div className="mx-auto max-w-6xl px-4 py-10 lg:px-8">
         <h1 className="font-display text-4xl font-semibold md:text-5xl">Checkout</h1>
 
@@ -85,8 +90,8 @@ export default function Checkout() {
             <section className="rounded-2xl border border-ink-100 bg-white p-6">
               <h2 className="font-medium">Payment</h2>
               <p className="mt-2 text-sm text-ink-600">
-                You will be redirected to Stripe's secure checkout to complete payment. Use test card{' '}
-                <code className="rounded bg-ink-50 px-1.5 py-0.5 text-xs">4242 4242 4242 4242</code> with any future date and any CVC.
+                After placing your order you’ll be redirected to our secure payment page to complete
+                the purchase. Your card details are never stored on our servers.
               </p>
             </section>
           </div>
@@ -101,20 +106,20 @@ export default function Checkout() {
                     <div>{i.name}</div>
                     <div className="text-xs text-ink-400">× {i.qty}</div>
                   </div>
-                  <div>${(i.price * i.qty).toFixed(2)}</div>
+                  <div>{formatPrice(i.price * i.qty)}</div>
                 </li>
               ))}
             </ul>
             <dl className="mt-4 space-y-2 text-sm">
-              <div className="flex justify-between"><dt className="text-ink-600">Subtotal</dt><dd>${subtotal.toFixed(2)}</dd></div>
-              <div className="flex justify-between"><dt className="text-ink-600">Shipping</dt><dd>{shippingFee === 0 ? 'Free' : `$${shippingFee.toFixed(2)}`}</dd></div>
-              <div className="flex justify-between"><dt className="text-ink-600">Tax</dt><dd>${tax.toFixed(2)}</dd></div>
+              <div className="flex justify-between"><dt className="text-ink-600">Subtotal</dt><dd>{formatPrice(subtotal)}</dd></div>
+              <div className="flex justify-between"><dt className="text-ink-600">Delivery</dt><dd>{shippingFee === 0 ? 'Free' : formatPrice(shippingFee)}</dd></div>
+              <div className="flex justify-between"><dt className="text-ink-600">VAT</dt><dd>Included</dd></div>
               <div className="mt-3 flex justify-between border-t border-ink-100 pt-3 text-base font-medium">
-                <dt>Total</dt><dd>${total.toFixed(2)}</dd>
+                <dt>Total</dt><dd>{formatPrice(total)}</dd>
               </div>
             </dl>
             <button disabled={placing} className="btn-primary mt-5 w-full">
-              {placing ? 'Placing order…' : `Pay $${total.toFixed(2)}`}
+              {placing ? 'Placing order…' : `Place order · ${formatPrice(total)}`}
             </button>
           </aside>
         </form>

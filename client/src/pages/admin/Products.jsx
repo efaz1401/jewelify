@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Pencil, Trash2, Plus, X } from 'lucide-react';
 import { api, apiError } from '../../api/client.js';
+import { formatPrice } from '../../utils/format.js';
 
 const MATERIALS = ['gold', 'silver', 'rose-gold', 'platinum', 'pearl', 'diamond', 'gemstone', 'other'];
 const STYLES = ['stud', 'hoop', 'drop', 'dangle', 'chandelier', 'huggie', 'threader', 'ear-cuff', 'other'];
@@ -108,7 +109,7 @@ export default function AdminProducts() {
                 </td>
                 <td className="px-4 py-3">{p.category?.name}</td>
                 <td className="px-4 py-3">
-                  ${p.price.toFixed(2)}
+                  {formatPrice(p.price)}
                   {p.discountPercent > 0 && <span className="ml-1 text-xs text-accent-600">-{p.discountPercent}%</span>}
                 </td>
                 <td className="px-4 py-3">{p.stock}</td>

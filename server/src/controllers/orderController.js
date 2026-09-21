@@ -1,9 +1,12 @@
 import Order from '../models/Order.js';
 import Product from '../models/Product.js';
 
-const TAX_RATE = 0.08;
-const SHIPPING_FLAT = 5.0;
-const FREE_SHIPPING_THRESHOLD = 100;
+// Prices are stored/charged in Bangladeshi Taka (BDT).
+// VAT is included in listed prices (common for BD e-commerce), so tax is 0.
+// Must match client/src/utils/format.js (FREE_DELIVERY_THRESHOLD / DELIVERY_FEE).
+const TAX_RATE = 0;
+const SHIPPING_FLAT = 60; // ৳ standard courier fee
+const FREE_SHIPPING_THRESHOLD = 999; // ৳ — free delivery above this
 
 export const createOrder = async (req, res) => {
   const { items, shippingAddress } = req.body;

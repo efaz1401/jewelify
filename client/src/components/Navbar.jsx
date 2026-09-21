@@ -23,6 +23,7 @@ export default function Navbar() {
     { to: '/shop', label: 'Shop' },
     { to: '/categories', label: 'Categories' },
     { to: '/deals', label: 'Deals' },
+    { to: '/blog', label: 'Blog' },
     { to: '/about', label: 'About' },
     { to: '/contact', label: 'Contact' },
   ];

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import PageTransition from '../components/PageTransition.jsx';
 import Loader from '../components/Loader.jsx';
+import Seo from '../seo/Seo.jsx';
+import { formatPrice } from '../utils/format.js';
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
@@ -16,6 +18,7 @@ export default function Orders() {
 
   return (
     <PageTransition>
+      <Seo title="My Orders" robots="noindex,nofollow" />
       <div className="mx-auto max-w-5xl px-4 py-12 lg:px-8">
         <h1 className="font-display text-4xl font-semibold">My orders</h1>
         {orders.length === 0 ? (
@@ -35,7 +38,7 @@ export default function Orders() {
                       o.status === 'paid' || o.status === 'processing' || o.status === 'shipped' ? 'text-accent-700 bg-accent-50 border-accent-200' :
                       o.status === 'cancelled' ? 'text-red-700 bg-red-50 border-red-200' : ''
                     }`}>{o.status}</span>
-                    <span className="font-medium">${o.totalPrice.toFixed(2)}</span>
+                    <span className="font-medium">{formatPrice(o.totalPrice)}</span>
                     <Link to={`/orders/${o._id}`} className="text-sm text-accent-600 hover:underline">View</Link>
                   </div>
                 </div>

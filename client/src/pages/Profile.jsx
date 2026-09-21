@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.jsx';
+import Seo from '../seo/Seo.jsx';
 import PageTransition from '../components/PageTransition.jsx';
 
 export default function Profile() {
@@ -34,6 +35,7 @@ export default function Profile() {
 
   return (
     <PageTransition>
+      <Seo title="Your Profile" robots="noindex,nofollow" />
       <div className="mx-auto max-w-3xl px-4 py-12 lg:px-8">
         <h1 className="font-display text-4xl font-semibold">Your profile</h1>
         <p className="mt-1 text-sm text-ink-600">Signed in as {user?.email}</p>

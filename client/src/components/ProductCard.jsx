@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingBag, Star } from 'lucide-react';
 import { useCart } from '../context/CartContext.jsx';
+import { formatPrice } from '../utils/format.js';
 
 export default function ProductCard({ product, index = 0 }) {
   const { addItem } = useCart();
@@ -20,7 +21,10 @@ export default function ProductCard({ product, index = 0 }) {
         <motion.img
           src={product.images?.[0] || 'https://placehold.co/600x600?text=Jewelify'}
           alt={product.name}
+          width="600"
+          height="600"
           loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover"
           whileHover={{ scale: 1.06 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -59,11 +63,11 @@ export default function ProductCard({ product, index = 0 }) {
           <div>
             {hasDiscount ? (
               <div className="flex items-baseline gap-2">
-                <span className="font-semibold text-ink-900">${finalPrice.toFixed(2)}</span>
-                <span className="text-xs line-through text-ink-400">${product.price.toFixed(2)}</span>
+                <span className="font-semibold text-ink-900">{formatPrice(finalPrice)}</span>
+                <span className="text-xs line-through text-ink-400">{formatPrice(product.price)}</span>
               </div>
             ) : (
-              <span className="font-semibold text-ink-900">${product.price.toFixed(2)}</span>
+              <span className="font-semibold text-ink-900">{formatPrice(product.price)}</span>
             )}
           </div>
           <button

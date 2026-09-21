@@ -6,6 +6,7 @@ import { api } from '../api/client.js';
 import ProductCard from '../components/ProductCard.jsx';
 import PageTransition from '../components/PageTransition.jsx';
 import Loader from '../components/Loader.jsx';
+import Seo from '../seo/Seo.jsx';
 
 const MATERIALS = ['gold', 'silver', 'rose-gold', 'platinum', 'pearl', 'diamond', 'gemstone'];
 const STYLES = ['stud', 'hoop', 'drop', 'dangle', 'chandelier', 'huggie', 'threader', 'ear-cuff'];
@@ -67,10 +68,16 @@ export default function Shop() {
 
   return (
     <PageTransition>
+      {/* Category-filtered views canonicalize to their landing page to avoid duplicate indexing */}
+      <Seo
+        title="Shop Earrings Online in Bangladesh"
+        description="Browse all earrings — studs, hoops, drops, dangles & pearls. Trendy, skin-friendly designs from ৳250 with cash on delivery across Bangladesh."
+        path={filters.category ? `/category/${filters.category}` : '/shop'}
+      />
       <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
         <div className="mb-8">
-          <p className="text-xs uppercase tracking-widest text-accent-600">Earrings</p>
-          <h1 className="font-display text-4xl font-semibold md:text-5xl">All products</h1>
+          <p className="text-xs uppercase tracking-widest text-accent-600">Cash on delivery · Nationwide</p>
+          <h1 className="font-display text-4xl font-semibold md:text-5xl">Shop earrings</h1>
         </div>
 
         <div className="mb-6 flex flex-wrap items-center gap-3">

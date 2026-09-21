@@ -7,6 +7,9 @@ import { useCart } from '../context/CartContext.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import PageTransition from '../components/PageTransition.jsx';
 import Loader from '../components/Loader.jsx';
+import Seo from '../seo/Seo.jsx';
+import { productSchema, breadcrumbSchema } from '../seo/jsonLd.js';
+import { formatPrice } from '../utils/format.js';
 import toast from 'react-hot-toast';
 
 export default function ProductDetail() {
@@ -47,9 +50,32 @@ export default function ProductDetail() {
 
   return (
     <PageTransition>
+      <Seo
+        title={`${product.name} — Price in Bangladesh`}
+        description={`${String(product.description).slice(0, 140)}… Order online with cash on delivery anywhere in Bangladesh.`}
+        path={`/product/${product.slug}`}
+        image={product.images?.[0]}
+        type="product"
+        jsonLd={[
+          productSchema(product),
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Shop', path: '/shop' },
+            ...(product.category?.slug
+              ? [{ name: product.category.name, path: `/category/${product.category.slug}` }]
+              : []),
+            { name: product.name, path: `/product/${product.slug}` },
+          ]),
+        ]}
+      />
       <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
         <nav className="mb-6 text-xs text-ink-400">
           <Link to="/" className="hover:text-ink-900">Home</Link> / <Link to="/shop" className="hover:text-ink-900">Shop</Link> /{' '}
+          {product.category?.slug && (
+            <>
+              <Link to={`/category/${product.category.slug}`} className="hover:text-ink-900">{product.category.name}</Link> /{' '}
+            </>
+          )}
           <span className="text-ink-900">{product.name}</span>
         </nav>
 
@@ -78,7 +104,7 @@ export default function ProductDetail() {
                       i === activeImg ? 'border-accent-500' : 'border-transparent'
                     }`}
                   >
-                    <img src={src} alt="" className="h-full w-full object-cover" />
+                    <img src={src} alt={`${product.name} — view ${i + 1}`} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -98,10 +124,10 @@ export default function ProductDetail() {
             )}
 
             <div className="mt-4 flex items-baseline gap-3">
-              <span className="font-display text-3xl font-semibold">${finalPrice.toFixed(2)}</span>
+              <span className="font-display text-3xl font-semibold">{formatPrice(finalPrice)}</span>
               {product.discountPercent > 0 && (
                 <>
-                  <span className="text-ink-400 line-through">${product.price.toFixed(2)}</span>
+                  <span className="text-ink-400 line-through">{formatPrice(product.price)}</span>
                   <span className="rounded-full bg-accent-50 px-2 py-0.5 text-xs font-semibold text-accent-700">
                     Save {product.discountPercent}%
                   </span>
@@ -144,15 +170,15 @@ export default function ProductDetail() {
             <div className="mt-8 grid grid-cols-3 gap-3 text-center">
               <div className="rounded-2xl bg-ink-50 p-4 text-xs">
                 <Truck className="mx-auto mb-2 h-5 w-5 text-accent-600" />
-                Free shipping $100+
+                Free delivery over ৳999
               </div>
               <div className="rounded-2xl bg-ink-50 p-4 text-xs">
                 <RotateCcw className="mx-auto mb-2 h-5 w-5 text-accent-600" />
-                30-day returns
+                7-day easy exchange
               </div>
               <div className="rounded-2xl bg-ink-50 p-4 text-xs">
                 <Shield className="mx-auto mb-2 h-5 w-5 text-accent-600" />
-                Secure checkout
+                Cash on delivery
               </div>
             </div>
           </div>

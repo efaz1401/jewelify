@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { api, apiError } from '../../api/client.js';
+import { formatPrice } from '../../utils/format.js';
 
 const STATUSES = ['pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled'];
 
@@ -43,7 +44,7 @@ export default function AdminOrders() {
                   {o.user?.name}
                   <div className="text-xs text-ink-400">{o.user?.email}</div>
                 </td>
-                <td className="px-4 py-3">${o.totalPrice.toFixed(2)}</td>
+                <td className="px-4 py-3">{formatPrice(o.totalPrice)}</td>
                 <td className="px-4 py-3">{o.isPaid ? 'Yes' : 'No'}</td>
                 <td className="px-4 py-3">
                   <select value={o.status} onChange={(e) => setStatus(o._id, e.target.value)} className="input !py-1 !pr-8 text-xs capitalize">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import PageTransition from '../components/PageTransition.jsx';
+import Seo from '../seo/Seo.jsx';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
@@ -12,6 +13,11 @@ export default function Contact() {
   };
   return (
     <PageTransition>
+      <Seo
+        title="Contact Us"
+        description="Questions about an order, sizing or a gift? Message the Jewelify team — we reply fast and deliver all over Bangladesh."
+        path="/contact"
+      />
       <div className="mx-auto max-w-5xl px-4 py-16 lg:px-8">
         <p className="text-xs uppercase tracking-widest text-accent-600">We're here</p>
         <h1 className="font-display text-4xl font-semibold md:text-5xl">Say hello</h1>

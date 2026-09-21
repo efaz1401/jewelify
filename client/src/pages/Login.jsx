@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext.jsx';
 import PageTransition from '../components/PageTransition.jsx';
+import Seo from '../seo/Seo.jsx';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -27,6 +28,7 @@ export default function Login() {
 
   return (
     <PageTransition>
+      <Seo title="Sign In" robots="noindex,nofollow" />
       <div className="mx-auto grid max-w-5xl gap-10 px-4 py-12 lg:grid-cols-2 lg:px-8">
         <motion.div
           initial={{ opacity: 0, x: -20 }}

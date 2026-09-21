@@ -3,6 +3,7 @@ import { api } from '../api/client.js';
 import ProductCard from '../components/ProductCard.jsx';
 import PageTransition from '../components/PageTransition.jsx';
 import Loader from '../components/Loader.jsx';
+import Seo from '../seo/Seo.jsx';
 
 export default function Deals() {
   const [products, setProducts] = useState([]);
@@ -17,10 +18,15 @@ export default function Deals() {
 
   return (
     <PageTransition>
+      <Seo
+        title="Earring Deals & Discounts in Bangladesh"
+        description="Earrings on sale in Bangladesh — grab trendy studs, hoops and drops at discounted prices. Limited stock, cash on delivery available."
+        path="/deals"
+      />
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
         <div className="rounded-3xl bg-gradient-to-r from-accent-50 via-white to-accent-50 p-10 text-center">
           <p className="text-xs uppercase tracking-widest text-accent-600">Limited time</p>
-          <h1 className="mt-2 font-display text-4xl font-semibold md:text-5xl">Deals & discounts</h1>
+          <h1 className="mt-2 font-display text-4xl font-semibold md:text-5xl">Earring deals & discounts</h1>
           <p className="mx-auto mt-3 max-w-xl text-ink-600">
             Save on our most-loved pairs. New markdowns every week.
           </p>

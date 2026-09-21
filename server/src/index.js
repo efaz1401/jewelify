@@ -21,6 +21,7 @@ import orderRoutes from './routes/orders.js';
 import adminRoutes from './routes/admin.js';
 import { stripeWebhook } from './controllers/paymentController.js';
 import { notFound, errorHandler } from './middleware/error.js';
+import { serveSpaWithSeo, sitemapXml, robotsTxt } from './utils/seo.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -82,13 +83,17 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Serve frontend in production
+// Serve frontend in production (with per-route SEO meta/JSON-LD injection)
 if (process.env.NODE_ENV === 'production') {
   const clientDist = path.resolve(__dirname, '../../client/dist');
+  const indexHtml = path.join(clientDist, 'index.html');
+  app.get('/robots.txt', robotsTxt);
+  app.get('/sitemap.xml', sitemapXml);
   app.use(express.static(clientDist));
+  const serveSpa = serveSpaWithSeo(indexHtml);
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.join(clientDist, 'index.html'));
+    return serveSpa(req, res, next);
   });
 }
 
