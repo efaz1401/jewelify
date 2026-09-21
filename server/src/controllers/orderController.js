@@ -9,7 +9,7 @@ const SHIPPING_FLAT = 60; // ৳ standard courier fee
 const FREE_SHIPPING_THRESHOLD = 999; // ৳ — free delivery above this
 
 export const createOrder = async (req, res) => {
-  const { items, shippingAddress } = req.body;
+  const { items, shippingAddress, paymentMethod = 'cod' } = req.body;
   if (!items || !items.length) return res.status(400).json({ message: 'Cart is empty' });
 
   const productIds = items.map((i) => i.product);
@@ -41,11 +41,22 @@ export const createOrder = async (req, res) => {
     user: req.user._id,
     items: orderItems,
     shippingAddress,
+    paymentMethod,
     itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
+    // COD orders are confirmed immediately — cash is collected by the courier
+    ...(paymentMethod === 'cod' && { status: 'processing' }),
   });
+
+  // Reserve stock at checkout for COD. (Stripe orders reserve stock in the
+  // payment webhook, only after the customer actually pays.)
+  if (paymentMethod === 'cod') {
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, { $inc: { stock: -item.qty } });
+    }
+  }
 
   res.status(201).json({ order });
 };
@@ -73,10 +84,22 @@ export const updateOrderStatus = async (req, res) => {
   const { status } = req.body;
   const order = await Order.findById(req.params.id);
   if (!order) return res.status(404).json({ message: 'Order not found' });
+  const wasCancelled = order.status === 'cancelled';
   order.status = status;
   if (status === 'delivered') {
     order.isDelivered = true;
     order.deliveredAt = new Date();
+    // COD cash is collected by the courier at the door — delivered means paid
+    if (order.paymentMethod === 'cod' && !order.isPaid) {
+      order.isPaid = true;
+      order.paidAt = new Date();
+    }
+  }
+  // Restock reserved items if a COD order is cancelled before fulfilment
+  if (status === 'cancelled' && !wasCancelled && order.paymentMethod === 'cod' && !order.isDelivered) {
+    for (const item of order.items) {
+      await Product.findByIdAndUpdate(item.product, { $inc: { stock: item.qty } });
+    }
   }
   await order.save();
   res.json({ order });

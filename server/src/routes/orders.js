@@ -20,9 +20,12 @@ router.post(
     body('items').isArray({ min: 1 }),
     body('items.*.product').isMongoId(),
     body('items.*.qty').isInt({ min: 1, max: 20 }),
+    body('paymentMethod').optional().isIn(['cod', 'stripe']),
     body('shippingAddress.line1').trim().isLength({ min: 1 }),
     body('shippingAddress.city').trim().isLength({ min: 1 }),
     body('shippingAddress.country').trim().isLength({ min: 1 }),
+    // Couriers in Bangladesh call before delivery — phone is essential
+    body('shippingAddress.phone').trim().isLength({ min: 6 }),
   ],
   validate,
   createOrder

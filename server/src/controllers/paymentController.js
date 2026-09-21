@@ -16,6 +16,9 @@ export const createCheckoutSession = async (req, res) => {
     return res.status(403).json({ message: 'Forbidden' });
   }
   if (order.isPaid) return res.status(400).json({ message: 'Order already paid' });
+  if (order.paymentMethod === 'cod') {
+    return res.status(400).json({ message: 'This order is Cash on Delivery — no online payment needed.' });
+  }
 
   const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
@@ -26,7 +29,7 @@ export const createCheckoutSession = async (req, res) => {
     line_items: order.items.map((i) => ({
       quantity: i.qty,
       price_data: {
-        currency: 'usd',
+        currency: 'bdt',
         unit_amount: Math.round(i.price * 100),
         product_data: {
           name: i.name,
@@ -40,8 +43,8 @@ export const createCheckoutSession = async (req, res) => {
             {
               shipping_rate_data: {
                 type: 'fixed_amount',
-                fixed_amount: { amount: Math.round(order.shippingPrice * 100), currency: 'usd' },
-                display_name: 'Standard Shipping',
+                fixed_amount: { amount: Math.round(order.shippingPrice * 100), currency: 'bdt' },
+                display_name: 'Courier Delivery (2–4 days)',
               },
             },
           ]

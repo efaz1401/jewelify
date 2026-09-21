@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Banknote, CreditCard } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api, apiError } from '../api/client.js';
 import { useCart } from '../context/CartContext.jsx';
@@ -13,6 +14,7 @@ export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
   const navigate = useNavigate();
   const [placing, setPlacing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('cod');
   const [shipping, setShipping] = useState({
     fullName: user?.name || '',
     line1: user?.address?.line1 || '',
@@ -48,10 +50,18 @@ export default function Checkout() {
       const { data } = await api.post('/orders', {
         items: items.map((i) => ({ product: i.productId, qty: i.qty })),
         shippingAddress: shipping,
+        paymentMethod,
       });
       const orderId = data.order._id;
-      const pay = await api.post(`/orders/${orderId}/pay`);
       clearCart();
+
+      // Cash on delivery — order is confirmed instantly, no payment redirect
+      if (paymentMethod === 'cod') {
+        navigate(`/orders/${orderId}?ordered=1`);
+        return;
+      }
+
+      const pay = await api.post(`/orders/${orderId}/pay`);
       if (pay.data.url) {
         window.location.href = pay.data.url;
       } else {
@@ -83,16 +93,60 @@ export default function Checkout() {
                 <input className="input" placeholder="State / region" value={shipping.state} onChange={set('state')} />
                 <input className="input" placeholder="Postal code" value={shipping.postalCode} onChange={set('postalCode')} />
                 <input required className="input" placeholder="Country" value={shipping.country} onChange={set('country')} />
-                <input className="input sm:col-span-2" placeholder="Phone (optional)" value={shipping.phone} onChange={set('phone')} />
+                <input required className="input sm:col-span-2" placeholder="Phone number (required — courier will call)" value={shipping.phone} onChange={set('phone')} />
               </div>
             </section>
 
             <section className="rounded-2xl border border-ink-100 bg-white p-6">
-              <h2 className="font-medium">Payment</h2>
-              <p className="mt-2 text-sm text-ink-600">
-                After placing your order you’ll be redirected to our secure payment page to complete
-                the purchase. Your card details are never stored on our servers.
-              </p>
+              <h2 className="font-medium">Payment method</h2>
+              <div className="mt-4 space-y-3">
+                <label
+                  className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition ${
+                    paymentMethod === 'cod' ? 'border-accent-500 bg-accent-50' : 'border-ink-100 hover:border-ink-200'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    checked={paymentMethod === 'cod'}
+                    onChange={() => setPaymentMethod('cod')}
+                    className="mt-1"
+                  />
+                  <Banknote className="h-5 w-5 flex-none text-accent-600" />
+                  <span>
+                    <span className="flex flex-wrap items-center gap-2 font-medium">
+                      Cash on Delivery
+                      <span className="rounded-full bg-accent-500 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white">
+                        Recommended
+                      </span>
+                    </span>
+                    <span className="mt-1 block text-xs text-ink-600">
+                      Pay in cash when your parcel arrives — no card needed. Available all over Bangladesh.
+                    </span>
+                  </span>
+                </label>
+
+                <label
+                  className={`flex cursor-pointer items-start gap-3 rounded-2xl border p-4 transition ${
+                    paymentMethod === 'stripe' ? 'border-accent-500 bg-accent-50' : 'border-ink-100 hover:border-ink-200'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    checked={paymentMethod === 'stripe'}
+                    onChange={() => setPaymentMethod('stripe')}
+                    className="mt-1"
+                  />
+                  <CreditCard className="h-5 w-5 flex-none text-ink-400" />
+                  <span>
+                    <span className="font-medium">Pay online (card)</span>
+                    <span className="mt-1 block text-xs text-ink-600">
+                      Secure card payment. You’ll be redirected to our payment page after placing the order.
+                    </span>
+                  </span>
+                </label>
+              </div>
             </section>
           </div>
 

@@ -45,7 +45,12 @@ export default function AdminOrders() {
                   <div className="text-xs text-ink-400">{o.user?.email}</div>
                 </td>
                 <td className="px-4 py-3">{formatPrice(o.totalPrice)}</td>
-                <td className="px-4 py-3">{o.isPaid ? 'Yes' : 'No'}</td>
+                <td className="px-4 py-3">
+                  {o.isPaid ? 'Yes' : o.paymentMethod === 'cod' ? 'COD' : 'No'}
+                  {o.paymentMethod === 'cod' && (
+                    <div className="text-xs text-ink-400">cash on delivery</div>
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <select value={o.status} onChange={(e) => setStatus(o._id, e.target.value)} className="input !py-1 !pr-8 text-xs capitalize">
                     {STATUSES.map((s) => <option key={s}>{s}</option>)}

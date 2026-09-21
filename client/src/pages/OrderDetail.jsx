@@ -29,6 +29,12 @@ export default function OrderDetail() {
   }, [id]);
 
   useEffect(() => {
+    if (params.get('ordered')) {
+      toast.success('Order placed! Pay cash when your parcel arrives. 📦');
+      const next = new URLSearchParams(params);
+      next.delete('ordered');
+      setParams(next, { replace: true });
+    }
     if (params.get('success')) {
       toast.success('Payment successful — thank you!');
       const t = setTimeout(() => {
@@ -64,9 +70,17 @@ export default function OrderDetail() {
         <h1 className="mt-4 font-display text-4xl font-semibold">Order #{order._id.slice(-8)}</h1>
         <p className="mt-1 text-sm text-ink-600">
           Placed {new Date(order.createdAt).toLocaleString()} · Status: <span className="capitalize font-medium">{order.status}</span>
+          {' · '}{order.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online payment'}
         </p>
 
-        {!order.isPaid && (
+        {!order.isPaid && order.paymentMethod === 'cod' && (
+          <div className="mt-5 rounded-2xl border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+            <span className="font-medium">Cash on delivery.</span> Please keep {formatPrice(order.totalPrice)} ready
+            when your parcel arrives — the courier will call you first.
+          </div>
+        )}
+
+        {!order.isPaid && order.paymentMethod !== 'cod' && (
           <div className="mt-5 rounded-2xl border border-accent-200 bg-accent-50 p-4 text-sm">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <span>This order is awaiting payment.</span>
