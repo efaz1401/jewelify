@@ -18,3 +18,6 @@ coverage/
 .parcel-cache/
 server/uploads/
 client/.vite/
+
+.data/
+*.log
